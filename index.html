@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Download System</title>
+    <title>DLD System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://gcloud.cfd/assets/css/player.css">
+  
     <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
     <script type="text/javascript">jwplayer.key="zTEbSn/eAplL0RLXT030FzOcek6qXmtrxju6Jg==";</script>
 
@@ -33,6 +33,9 @@
             --glass-bg: rgba(26, 5, 40, 0.5);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-highlight: rgba(255, 255, 255, 0.15);
+          /* Define gradients for use in the styles below */
+  --yellow-gradient: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  --yellow-gradient-muted: linear-gradient(135deg, #FFEB3B 0%, #FFC107 100%);
         }
         
         body {
@@ -454,6 +457,99 @@
            display: inline-block;
            background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
        }
+      
+      
+      /* 1. Styles the badge in the episode header (e.g., "Episode 1 [Not working]") */
+.not-working-header-badge {
+  display: inline-block;
+  
+  /* Make text a yellow gradient */
+  background: var(--yellow-gradient-muted);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  
+  /* Add a subtle glow */
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+
+  /* Style the border */
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  background-color: rgba(255, 215, 0, 0.05); /* Very faint bg */
+  
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 50px; /* Pill shape */
+  margin-left: 8px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 2. Styles the text inside a download card (e.g., "[Not Working...] 1080p") */
+.not-working-link-badge {
+  /* Make text a yellow gradient */
+  background: var(--yellow-gradient-muted);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  /* Add a subtle glow */
+  text-shadow: 0 0 5px rgba(255, 255, 0, 0.3);
+
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-right: 8px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* 3. Styles the 'span' that replaces a non-working download button */
+.download-card > span[style*="cursor: not-allowed"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px 24px !important;
+  
+  /* Dark glassy background for the disabled button */
+  background: rgba(26, 5, 40, 0.5) !important; /* --glass-bg */
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  
+  /* Make the text "Not Working" a yellow gradient */
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-image: var(--yellow-gradient-muted) !important;
+  
+  /* Muted yellow border */
+  border: 1px solid rgba(255, 215, 0, 0.3) !important;
+  
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4) !important; /* Yellow glow text */
+  box-shadow: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* 4. Styles the icon for the disabled button to match */
+.download-card > span[style*="cursor: not-allowed"]::before {
+  font-family: "Font Awesome 6 Free";
+  content: "\f05e"; /* fa-ban icon */
+  font-weight: 900;
+  font-size: 0.9em;
+  
+  /* Make the icon a yellow gradient too */
+  background: var(--yellow-gradient-muted);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.8;
+}
     </style>
 </head>
 <body>
@@ -696,8 +792,8 @@
                     });
 
                     // 5. Add Custom JWPlayer Logic
-                    player.addButton("./logomini.svg", "Powered By GCloud", function() {
-                        var win = window.open("https://gcloud.lol", "_blank");
+                    player.addButton("./logomini.svg", "Powered By JH Movie Hub Team!", function() {
+                        var win = window.open("https://prm.jhmhub.jhtone.site/", "_blank");
                         win.focus();
                     }, "Brand Logo");
 
@@ -882,16 +978,56 @@
                 downloadLinksHtml = Object.entries(episodeGroups).map(([episodeName, qualities], index) => {
                     const hasNonWorkingLinks = qualities.some(q => q.link.trim().startsWith('#'));
                     let statusBadge = hasNonWorkingLinks ? '<span class="not-working-header-badge">Not working</span>' : (index === 0 ? '<span class="recommended-badge">Recommended</span>' : '');
+                    
                     const qualityLinks = qualities.map(q => {
                         const isNotWorking = q.link.trim().startsWith('#');
                         let qualityDisplayHtml = `<span class="download-quality">${q.quality}</span>`;
                         if (isNotWorking) qualityDisplayHtml = `<span class="not-working-link-badge">Not Working...</span>` + qualityDisplayHtml;
-                        const buttonClass = isDownloadUnlocked ? 'download-btn' : 'download-btn locked-btn';
-                        const buttonIcon = isDownloadUnlocked ? 'fas fa-download' : 'fas fa-lock';
-                        const buttonText = isDownloadUnlocked ? 'Download' : 'Click to Unlock';
-                        const linkContent = isNotWorking ? `<span class="not-working-label">Not Working</span>` : `<a href="#" data-download-url="${q.link}" class="${buttonClass}"><i class="${buttonIcon}"></i> ${buttonText}</a>`;
+
+                        // --- START: MODIFIED LOGIC ---
+                        const is1080p = episodeName.toLowerCase().includes('1080p');
+                        let isThisButtonUnlocked;
+                        if (is1080p) {
+                            isThisButtonUnlocked = isFromPremiumSite;
+                        } else {
+                            isThisButtonUnlocked = isDownloadUnlocked;
+                        }
+
+                        const buttonClass = isThisButtonUnlocked ? 'download-btn' : 'download-btn locked-btn';
+                        const buttonIcon = isThisButtonUnlocked ? 'fas fa-download' : 'fas fa-lock';
+                        const buttonText = isThisButtonUnlocked ? 'Download' : (is1080p ? 'Bye Premium!' : 'Click to Unlock');
+                        const premiumAttribute = is1080p ? 'data-premium="true"' : '';
+                        
+                        let linkContent;
+                        if (isNotWorking) {
+                            // not-working-label এর জন্য একটি বেসিক স্টাইল যোগ করা হয়েছে
+                            linkContent = `<span style="padding: 10px 15px; background: rgba(255, 27, 75, 0.1); border: 1px solid var(--accent-red); border-radius: 12px; color: var(--accent-red); font-weight: 600; font-size: 0.9rem; cursor: not-allowed;">Not Working</span>`;
+                        
+                        } else {
+                            // বাটনটি তৈরি করুন
+                            const buttonHtml = `<a href="#" data-download-url="${q.link}" class="${buttonClass}" ${premiumAttribute}><i class="${buttonIcon}"></i> ${buttonText}</a>`;
+                            
+                            // চেক করুন এটা প্রিমিয়াম এবং লকড কিনা
+                            if (!isThisButtonUnlocked && is1080p) {
+                                // যদি হয়, তাহলে বাটনের সামনে লাল রঙের লেবেলটি যোগ করুন
+                                linkContent = `
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                                        <span style="display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; background: rgba(255, 27, 75, 0.1); border: 1px solid var(--accent-red); border-radius: 8px; color: var(--accent-red); font-weight: 500; font-size: 0.8rem; font-style: italic;">
+                                           <i class="fas fa-lock" style="font-size: 0.7rem;"></i>শুধু প্রিমিয়াম ইউজার
+                                        </span>
+                                        ${buttonHtml}
+                                    </div>
+                                `;
+                            } else {
+                                // না হলে, শুধু বাটনটি দেখান
+                                linkContent = buttonHtml;
+                            }
+                        }
+                        // --- END: MODIFIED LOGIC ---
+
                         return `<div class="download-card"><div style="display: flex; align-items: center; gap: 10px;">${qualityDisplayHtml}</div>${linkContent}</div>`;
                     }).join('');
+
                     return `<div class="episode-item ${index === 0 ? 'active' : ''}"><div class="episode-header"><span>${episodeName} ${statusBadge}</span><i class="fas fa-chevron-down arrow-icon"></i></div><div class="episode-links">${qualityLinks}</div></div>`;
                 }).join('');
             } else {
@@ -944,25 +1080,45 @@
         }
         
         document.addEventListener('click', e => {
-            const downloadBtn = e.target.closest('.download-btn');
-            if (downloadBtn) {
-                e.preventDefault(); 
-                if (!downloadBtn.dataset.downloadUrl) return;
-                if (isDownloadUnlocked) {
-                    window.open(downloadBtn.dataset.downloadUrl, '_blank');
-                } else {
-                    window.open(downloadUnlockUrl, '_blank');
-                    isDownloadUnlocked = true;
-                    document.querySelectorAll('.download-btn[data-download-url]').forEach(btn => {
-                        btn.classList.remove('locked-btn');
-                        btn.innerHTML = '<i class="fas fa-download"></i> Download';
-                        btn.href = btn.dataset.downloadUrl;
-                        btn.target = "_blank";
-                    });
-                }
-            }
-        });
+            const downloadBtn = e.target.closest('.download-btn');
+            if (downloadBtn) {
+                e.preventDefault(); 
+                if (!downloadBtn.dataset.downloadUrl) return;
 
+                // --- START: MODIFIED CLICK LOGIC ---
+                const isPremiumButton = downloadBtn.dataset.premium === 'true';
+
+                if (isPremiumButton) {
+                    // This is a 1080p button
+                    if (isFromPremiumSite) {
+                        // User is premium, let them download
+                        window.open(downloadBtn.dataset.downloadUrl, '_blank');
+                    } else {
+                        // User is not premium, send them to buy
+                        window.open(premiumPurchaseUrl, '_blank'); 
+                        // Do NOT set isDownloadUnlocked = true
+                        // Do NOT restyle the button
+                    }
+                } else {
+                    // This is a regular button, use existing ad-click logic
+                    if (isDownloadUnlocked) {
+                        window.open(downloadBtn.dataset.downloadUrl, '_blank');
+                    } else {
+                        window.open(downloadUnlockUrl, '_blank');
+                        isDownloadUnlocked = true;
+                        
+                        // Update all NON-PREMIUM buttons
+                        document.querySelectorAll('.download-btn[data-download-url]:not([data-premium="true"])').forEach(btn => {
+                            btn.classList.remove('locked-btn');
+                            btn.innerHTML = '<i class="fas fa-download"></i> Download';
+                            btn.href = btn.dataset.downloadUrl;
+                            btn.target = "_blank";
+                        });
+                    }
+                }
+                // --- END: MODIFIED CLICK LOGIC ---
+            }
+        });
         document.addEventListener('keydown', e => { if (modal.style.display === 'block' && e.key === 'Escape') e.preventDefault(); });
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = e => {
